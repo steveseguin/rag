@@ -102,7 +102,6 @@ The system uses:
 ### Storage Management
 - Browser-based persistence
 - Import/export capabilities
-- Statistics tracking
 
 ## Contributing
 
