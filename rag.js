@@ -92,7 +92,7 @@ async function exportStore() {
 }
 async function checkAndLoadLocalKnowledgeBase() {
     try {
-        const response = await fetch('knowledge_base.json');
+        const response = await fetch('https://github.com/steveseguin/rag/releases/download/0.0/knowledge_base.json');
         if (response.ok) {
             const data = await response.json();
             await importStore(data);
