@@ -1,0 +1,348 @@
+<!-- index.html !-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VDO.Ninja Help Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+			background: #aaa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .search-container, .upload-container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        #searchInput {
+            width: 70%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button.danger {
+            background-color: #f44336;
+        }
+        button.danger:hover {
+            background-color: #da190b;
+        }
+        .response-container {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .sources-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        .source-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 3px;
+        }
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        .progress-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }
+        .progress-text {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        .stats {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        #fileList {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+		.action-buttons {
+			margin-top: 15px;
+			display: flex;
+			gap: 10px;
+		}
+
+		.upload-container {
+			display: none;
+		}
+
+		#loadKnowledgeBaseButton {
+			background-color: #4a90e2;
+		}
+
+		#loadKnowledgeBaseButton:hover {
+			background-color: #357abd;
+		}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VDO.Ninja Help Search</h1>
+        
+        <div class="search-container">
+            <h2>Search</h2>
+            <input type="text" id="searchInput" placeholder="Ask a question about VDO.Ninja...">
+            <button id="searchButton">Search</button>
+			
+            <div id="loading" class="loading">Searching...</div>
+            <div id="response" class="response-container"></div>
+            <div id="sources" class="sources-container"></div>
+        </div>
+		<div class="upload-container">
+            <h2>Knowledge Base Management</h2>
+            <div class="stats" id="storeStats">Loading store statistics...</div>
+            <div style="margin-top: 15px;">
+                <input type="file" id="folderInput" webkitdirectory directory multiple>
+                <button id="processButton">Process Files</button>
+                <button id="clearButton" class="danger">Clear Knowledge Base</button>
+				<div class="action-buttons">
+				<button id="downloadButton">Download Knowledge Base</button>
+				<input type="file" id="knowledgeBaseInput" accept=".json,.bin" style="display:none">
+				<button id="loadKnowledgeBaseButton">Load Knowledge Base File</button>
+			</div>
+            </div>
+            <div id="fileList"></div>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">Processing...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import RAG from './rag.js';
+
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const loadingDiv = document.getElementById('loading');
+        const responseDiv = document.getElementById('response');
+        const sourcesDiv = document.getElementById('sources');
+        const folderInput = document.getElementById('folderInput');
+        const processButton = document.getElementById('processButton');
+        const clearButton = document.getElementById('clearButton');
+        const fileList = document.getElementById('fileList');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const storeStats = document.getElementById('storeStats');
+
+        async function updateStoreStats() {
+            try {
+                const stats = await RAG.getStoreStats();
+                storeStats.textContent = `Store contains ${stats.count} chunks (${stats.size} MB)`;
+            } catch (error) {
+                storeStats.textContent = 'Error loading store statistics';
+            }
+			
+			checkEmbeddingsDB();
+        }
+		
+		async function checkEmbeddingsDB() {
+			try {
+				const stats = await RAG.getStoreStats();
+				if (stats.count === 0) {
+					const loaded = await checkAndLoadLocalKnowledgeBase();
+					if (!loaded) {
+						uploadContainer.style.display = 'block';
+					} else {
+						await updateStoreStats();
+					}
+				}
+			} catch (error) {
+				console.error('Error checking embeddings store:', error);
+				uploadContainer.style.display = 'block';
+			}
+		}
+
+        
+		
+
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            if (!query) return;
+
+            loadingDiv.style.display = 'block';
+            responseDiv.innerHTML = '';
+            sourcesDiv.innerHTML = '';
+
+            try {
+                const result = await RAG.queryRAG(query);
+                
+                responseDiv.innerHTML = `<h2>Answer:</h2><p>${result.finalAnswer}</p>`;
+                
+			} catch(error){
+                responseDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        let selectedFiles = [];
+		
+		// Add to the script section in index.html after the existing button declarations
+		const downloadButton = document.getElementById('downloadButton');
+		const loadKnowledgeBaseButton = document.getElementById('loadKnowledgeBaseButton');
+		const knowledgeBaseInput = document.getElementById('knowledgeBaseInput');
+		const uploadContainer = document.querySelector('.upload-container');
+		
+		// Initial stats load
+        updateStoreStats();
+
+        folderInput.addEventListener('change', (e) => {
+            selectedFiles = Array.from(e.target.files).filter(file => {
+                const ext = file.name.split('.').pop().toLowerCase();
+                return ['js', 'html', 'md', 'txt'].includes(ext);
+            });
+
+            fileList.innerHTML = selectedFiles.length ? 
+                `Selected ${selectedFiles.length} valid files` : 
+                'No valid files selected';
+        });
+
+        processButton.addEventListener('click', async () => {
+			if (!selectedFiles.length) {
+				alert('Please select files first');
+				return;
+			}
+
+			progressContainer.style.display = 'block';
+			progressBar.style.width = '0%';
+			processButton.disabled = true;
+			let processed = 0;
+
+			try {
+				for (const file of selectedFiles) {
+					try {
+						const content = await file.text();
+						await RAG.processDocument(
+							`doc_${Date.now()}_${file.name}`, 
+							content,
+							{
+								title: file.name,
+								type: file.name.split('.').pop().toLowerCase(),
+								path: file.webkitRelativePath
+							},
+							(progress, docId) => {
+								const totalProgress = ((processed + (progress / 100)) / selectedFiles.length) * 100;
+								progressBar.style.width = `${totalProgress}%`;
+								progressText.textContent = `Processing ${file.name} (${Math.round(progress)}%)`;
+							}
+						);
+						processed++;
+					} catch (error) {
+						console.error(`Error processing ${file.name}:`, error);
+						progressText.textContent = `Error processing ${file.name}: ${error.message}`;
+						// Continue with next file despite error
+					}
+				}
+			} finally {
+				progressContainer.style.display = 'none';
+				processButton.disabled = false;
+				folderInput.value = '';
+				fileList.innerHTML = '';
+				selectedFiles = [];
+				await updateStoreStats();
+			}
+		});
+
+        clearButton.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to clear the entire knowledge base?')) {
+                try {
+                    await RAG.clearStore();
+                    await updateStoreStats();
+                    alert('Knowledge base cleared successfully');
+                } catch (error) {
+                    alert('Error clearing knowledge base: ' + error.message);
+                }
+            }
+        });
+
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+		
+		downloadButton.addEventListener('click', async () => {
+			try {
+				const blob = await RAG.exportStore();
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = 'knowledge_base.json';
+				document.body.appendChild(a);
+				a.click();
+				document.body.removeChild(a);
+				URL.revokeObjectURL(url);
+			} catch (error) {
+				alert('Error downloading knowledge base: ' + error.message);
+			}
+		});
+
+		loadKnowledgeBaseButton.addEventListener('click', () => {
+			knowledgeBaseInput.click();
+		});
+
+		knowledgeBaseInput.addEventListener('change', async (e) => {
+			const file = e.target.files[0];
+			if (!file) return;
+
+			try {
+				const text = await file.text();
+				const data = JSON.parse(text);
+				await RAG.importStore(data);
+				await updateStoreStats();
+				alert('Knowledge base loaded successfully');
+			} catch (error) {
+				alert('Error loading knowledge base: ' + error.message);
+			}
+			knowledgeBaseInput.value = '';
+		});
+		
+		
+    </script>
+</body>
+</html>
