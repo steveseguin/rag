@@ -1,15 +1,17 @@
 // rag.js
+
+const REMOTE_LOAD = 'https://backup.vdo.ninja/knowledge_base.json';
+const initialContext = "VDO.Ninja is a free, open-source web service that allows you to bring live video and audio from a smartphone, tablet, or remote computer directly into video production software such as OBS Studio, vMix, or Streamlabs. \nVDO.Ninja works by using WebRTC, a peer-to-peer streaming technology that is built into most modern web browsers. This allows for very low-latency and high-quality video and audio streaming, even across the Internet. \nVDO.Ninja supports a wide range of use cases, including:\nTurning a mobile device into a wireless webcam \nStreaming high-quality audio and video across the Internet or within a LAN \nRecording remote or local video without needing any downloads \nApplying green screens, digital face effects, and other advanced video filters to video streams \nAnd more! \nVDO.Ninja is also compatible with a wide range of devices, including smartphones, tablets, laptops, desktops, and even Raspberry Pis. \nHere are some of the key concepts and terms used in VDO.Ninja:\nView Link: A URL that is used to view a video stream. \nPush Link: A URL that is used to publish a video stream. \nRoom: A virtual room where multiple devices can connect to share audio and video. \nDirector: A user who has control over a room. \nGuest: A user who joins a room. \nScene: A collection of video streams that are mixed together. \nURL Parameter: A query string parameter that can be added to a VDO.Ninja URL to customize the behavior of the service.";
+
 const EMBEDDING_MODEL = "granite-embedding:30m"; // or your preferred model
 const COMPLETION_MODEL = "llama3.2:latest";
 const OLLAMA_ENDPOINT = "http://localhost:11434";
+
 const EMBEDDINGS_STORE_NAME = 'embeddings';
 const CHUNK_SIZE = 512;
 const OVERLAP_SIZE = 50;
 const MAX_RECURSIVE_SEARCHES = 10;
 const TARGET_TOKEN_COUNT = 8000;
-
-
-const initialContext = "VDO.Ninja is a free, open-source web service that allows you to bring live video and audio from a smartphone, tablet, or remote computer directly into video production software such as OBS Studio, vMix, or Streamlabs. \nVDO.Ninja works by using WebRTC, a peer-to-peer streaming technology that is built into most modern web browsers. This allows for very low-latency and high-quality video and audio streaming, even across the Internet. \nVDO.Ninja supports a wide range of use cases, including:\nTurning a mobile device into a wireless webcam \nStreaming high-quality audio and video across the Internet or within a LAN \nRecording remote or local video without needing any downloads \nApplying green screens, digital face effects, and other advanced video filters to video streams \nAnd more! \nVDO.Ninja is also compatible with a wide range of devices, including smartphones, tablets, laptops, desktops, and even Raspberry Pis. \nHere are some of the key concepts and terms used in VDO.Ninja:\nView Link: A URL that is used to view a video stream. \nPush Link: A URL that is used to publish a video stream. \nRoom: A virtual room where multiple devices can connect to share audio and video. \nDirector: A user who has control over a room. \nGuest: A user who joins a room. \nScene: A collection of video streams that are mixed together. \nURL Parameter: A query string parameter that can be added to a VDO.Ninja URL to customize the behavior of the service.";
 
 // IndexedDB setup for storing embeddings
 async function openEmbeddingsDB() {
@@ -92,7 +94,7 @@ async function exportStore() {
 }
 async function checkAndLoadLocalKnowledgeBase() {
     try {
-        const response = await fetch('https://backup.vdo.ninja/knowledge_base.json');
+        const response = await fetch(REMOTE_LOAD);
         if (response.ok) {
             const data = await response.json();
             await importStore(data);
