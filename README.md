@@ -2,6 +2,8 @@
 
 A lightweight, browser-based RAG (Retrieval-Augmented Generation) implementation using Ollama for local LLM inference. This system provides semantic search capabilities and knowledge base management through an intuitive web interface.
 
+What's a bit novel here is that the embeddings for the RAG look-up are client side, and LLM requests can use any API, even the local user's endpoint. It's essentially client-side user support and search, distributing costs to the users and maintaining user's privacy.
+
 [![Demo](https://img.shields.io/badge/Demo-Live-success)](https://steveseguin.github.io/rag/)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
