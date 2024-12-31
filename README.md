@@ -76,8 +76,8 @@ const COMPLETION_MODEL = "llama3.2:latest";
 ## Architecture
 
 The system uses:
-- IndexedDB for embeddings storage
-- WebRTC for file processing
+- One-time download of embeddings by client
+- IndexedDB for embeddings storage/cache
 - Ollama API for:
   - Text embeddings (granite-embedding:30m)
   - Text generation (llama3.2:latest)
