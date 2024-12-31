@@ -1,4 +1,4 @@
-rags are annoying.
+rags are annoying, but I've made my second one: https://steveseguin.github.io/rag/
 
 this requires ollama installed locally. it should be configured to allow CORS from https websites.
 ```
