@@ -54,6 +54,7 @@ const COMPLETION_MODEL = "llama3.2:latest";
 ### Pre-trained Knowledge Base
 - By default, the system loads a pre-trained VDO.Ninja knowledge base
 - Can be disabled by removing the remote loading functionality
+- You can't create a custom knowledge base until you remove the current one
 
 ### Custom Knowledge Base
 1. Click "Process Files" to upload documents
