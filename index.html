@@ -185,7 +185,7 @@
 			try {
 				const stats = await RAG.getStoreStats();
 				if (stats.count === 0) {
-					const loaded = await checkAndLoadLocalKnowledgeBase();
+					const loaded = await RAG.checkAndLoadLocalKnowledgeBase();
 					if (!loaded) {
 						uploadContainer.style.display = 'block';
 					} else {
