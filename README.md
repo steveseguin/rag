@@ -46,7 +46,7 @@ const COMPLETION_MODEL = "llama3.2:latest";
 ```
 
 4. Configure knowledge-base details in `rag.js`:
-```
+```javascript
 const REMOTE_LOAD = "replace or leave empty for now"
 const initialContext  = "A short generic explaination of the knowledge-base";
 ```
