@@ -96,6 +96,9 @@ The system uses:
 
 Pull requests welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and development process.
 
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
 ## Acknowledgments
 
 - [Ollama](https://ollama.ai) for local LLM inference
