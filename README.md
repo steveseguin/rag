@@ -43,15 +43,19 @@ ollama pull llama3.2:latest
 const OLLAMA_ENDPOINT = "http://localhost:11434";
 const EMBEDDING_MODEL = "granite-embedding:30m";
 const COMPLETION_MODEL = "llama3.2:latest";
+```
+
+4. Configure knowledge-base details in `rag.js`:
+```
 const REMOTE_LOAD = "replace or leave empty for now"
 const initialContext  = "A short generic explaination of the knowledge-base";
 ```
 
-4. Visit site and pre-train a knowledge database
+5. Visit site and pre-train a knowledge database
 
-5. Export embeddings and host on a CORS-friendly website
+6. Export embeddings and host on a CORS-friendly website
 
-6. Upodate `const REMOTE_LOAD` in `rag.js` to point to your hosted JSON embeddings file
+7. Upodate `const REMOTE_LOAD` in `rag.js` to point to your hosted JSON embeddings file
 
 ## Usage
 
