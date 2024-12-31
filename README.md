@@ -32,22 +32,26 @@ ollama pull granite-embedding:30m
 ollama pull llama3.2:latest
 ```
 
-## Quick Start
+## Quick Start to self-deploying
 
-1. Clone the repository:
-```bash
-git clone https://github.com/steveseguin/rag.git
-cd rag
-```
+1. Fork the repository on Github
 
-2. Configure Ollama endpoint in `rag.js`:
+2. Host the code with Github Pages
+
+3. Configure Ollama endpoint in `rag.js`:
 ```javascript
 const OLLAMA_ENDPOINT = "http://localhost:11434";
 const EMBEDDING_MODEL = "granite-embedding:30m";
 const COMPLETION_MODEL = "llama3.2:latest";
+const REMOTE_LOAD = "replace or leave empty for now"
+const initialContext  = "A short generic explaination of the knowledge-base";
 ```
 
-3. Serve the files using any web server and open in your browser
+4. Visit site and pre-train a knowledge database
+
+5. Export embeddings and host on a CORS-friendly website
+
+6. Upodate `const REMOTE_LOAD` in `rag.js` to point to your hosted JSON embeddings file
 
 ## Usage
 
@@ -61,6 +65,7 @@ const COMPLETION_MODEL = "llama3.2:latest";
 2. Select files (supported formats: .js, .html, .md, .txt)
 3. Monitor processing progress
 4. Knowledge base persists in browser storage
+5. Export and host embeddings if desired
 
 ### Search Interface
 - Enter queries in the search box
