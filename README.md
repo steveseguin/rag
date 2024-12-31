@@ -22,7 +22,7 @@ Demo, https://steveseguin.github.io/rag/, pre-configured with a VDO.Ninja knowle
 
 ![image](https://github.com/user-attachments/assets/2bf2dc49-9508-463e-b1f9-106177112b98)
 
-## Prerequisites
+## Prerequisites to use to the demo
 
 1. Install [Ollama](https://ollama.ai)
 2. Configure Ollama for CORS from HTTPS websites
