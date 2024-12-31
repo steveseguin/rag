@@ -18,7 +18,7 @@ What's a bit novel here is that the embeddings for the RAG look-up are client si
 - 🎯 Token-aware text chunking
 - 🧠 Recursive query refinement
 
-Demo, pre-configured with a VDO.Ninja knowledge-base: https://steveseguin.github.io/rag/
+Demo, https://steveseguin.github.io/rag/, pre-configured with a VDO.Ninja knowledge-base.
 
 ![image](https://github.com/user-attachments/assets/2bf2dc49-9508-463e-b1f9-106177112b98)
 
