@@ -676,8 +676,8 @@ const RAG = {
     getStoreStats,
     searchRAGWithTokens,
     recursiveQueryRAG,
-	checkAndLoadLocalKnowledgeBase,
-	exportStore
+    checkAndLoadLocalKnowledgeBase,
+    exportStore
 };
 
 export default RAG;
