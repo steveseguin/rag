@@ -5,10 +5,6 @@ A lightweight, browser-based RAG (Retrieval-Augmented Generation) implementation
 [![Demo](https://img.shields.io/badge/Demo-Live-success)](https://steveseguin.github.io/rag/)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-Demo: https://steveseguin.github.io/rag/
-
-![image](https://github.com/user-attachments/assets/2bf2dc49-9508-463e-b1f9-106177112b98)
-
 ## Features
 
 - 🌐 Fully client-side implementation with browser persistence
@@ -19,6 +15,10 @@ Demo: https://steveseguin.github.io/rag/
 - 📊 Real-time processing progress indicators
 - 🎯 Token-aware text chunking
 - 🧠 Recursive query refinement
+
+Demo: https://steveseguin.github.io/rag/
+
+![image](https://github.com/user-attachments/assets/2bf2dc49-9508-463e-b1f9-106177112b98)
 
 ## Prerequisites
 
