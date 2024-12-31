@@ -7,6 +7,8 @@ A lightweight, browser-based RAG (Retrieval-Augmented Generation) implementation
 
 Demo: https://steveseguin.github.io/rag/
 
+![image](https://github.com/user-attachments/assets/2bf2dc49-9508-463e-b1f9-106177112b98)
+
 ## Features
 
 - 🌐 Fully client-side implementation with browser persistence
