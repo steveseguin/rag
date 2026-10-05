@@ -153,7 +153,7 @@ Following context:
 ${result.context?.after || ''}
     `).join('\n---\n');
     
-    const finalAnswer = await generateResponse(originalQuery, contextText);
+    const finalAnswer = await generateResponse(originalQuery, [{ content: contextText }]);
     
     return {
         finalAnswer,
